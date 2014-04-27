@@ -18,7 +18,7 @@ public class ShadowFish : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
-		Debug.Log(timer);
+		//Debug.Log(timer);
 		float dist = (transform.position.x - initialPosition.x);
 		if (dist > swimRadius) {
 			Vector3 scale = transform.localScale;

@@ -3,7 +3,6 @@ using System.Collections;
 
 public class ShadowFishScurry : MonoBehaviour 
 {
-	Vector3 initialPosition;
 	float swimVelocity = 5.0f;
 	float leftLimit = -16.5f;
 	float rightLimit = 16.5f;
@@ -11,7 +10,7 @@ public class ShadowFishScurry : MonoBehaviour
 	// Use this for initialization
 	void Start () 
     { 
-		initialPosition = transform.position;
+
 	}
 	
 	// Update is called once per frame
@@ -21,7 +20,9 @@ public class ShadowFishScurry : MonoBehaviour
 		Vector3 pos = transform.position;
 		if(transform.position.x > rightLimit || transform.position.x < leftLimit )
 		{
-			Destroy(this);
+			//Debug.Log("Just died");
+			Destroy(gameObject);
+			Destroy (this);
 		}
 		else
 		{
@@ -31,7 +32,6 @@ public class ShadowFishScurry : MonoBehaviour
 				transform.position = new Vector3(pos.x + swimVelocity * Time.deltaTime, pos.y, pos.z);
 		}
 			
-		Debug.Log(pos.x);
 	}
 
     void FixedUpdate()

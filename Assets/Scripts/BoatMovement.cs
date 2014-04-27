@@ -3,14 +3,14 @@ using System.Collections;
 
 public class BoatMovement : MonoBehaviour 
 {
-    const float bobSpeed = 2.5f;
-    const float bobHeight = 0.03f;
-	const float maxRotate = 2.0f; //  in degrees
+    public float bobSpeed = 2.5f;
+    public float bobHeight = 0.03f;
+    public float maxRotate = 2.0f; //  in degrees
 
-    GameObject boatFishingUpper;
-    GameObject boatFishingLower;
-    GameObject boatPirateUpper;
-    GameObject boatPirateLower;
+    public GameObject boatFishingUpper;
+    public GameObject boatFishingLower;
+    public GameObject boatPirateUpper;
+    public GameObject boatPirateLower;
 
 	Vector3 boatFishingUpperStartPos;
 	Vector3 boatFishingLowertartPos;
@@ -25,20 +25,24 @@ public class BoatMovement : MonoBehaviour
 	// Use this for initialization
 	void Start () 
     {
-        boatFishingUpper = GameObject.Find("BoatFishingUpper");
-        boatFishingLower = GameObject.Find("BoatFishingLower");
-        boatPirateUpper = GameObject.Find("BoatPirateUpper");
-        boatPirateLower = GameObject.Find("BoatPirateLower");
+        //boatFishingUpper = GameObject.Find("BoatFishingUpper");
+        //boatFishingLower = GameObject.Find("BoatFishingLower");
+        //boatPirateUpper = GameObject.Find("BoatPirateUpper");
+        //boatPirateLower = GameObject.Find("BoatPirateLower");
 
 		boatFishingUpperStartPos = boatFishingUpper.transform.position;
 		boatFishingLowertartPos = boatFishingLower.transform.position;
-		boatPirateUpperStartPos = boatPirateUpper.transform.position;
+        if (boatPirateUpper != null)
+		    boatPirateUpperStartPos = boatPirateUpper.transform.position;
+        if (boatPirateLower != null)
 		boatPirateLowerStartPos = boatPirateLower.transform.position;
 
 		boatFishingUppperOrgTransform = boatFishingUpper.transform;
 		boatFishingLowerOrgTransform = boatFishingLower.transform;
-		boatPirateUpperOrgTransform = boatPirateUpper.transform;
-		boatPirateLowerOrgTransform = boatPirateLower.transform;
+        if (boatPirateUpper != null)
+            boatPirateUpperOrgTransform = boatPirateUpper.transform;
+        if (boatPirateLower != null) 
+            boatPirateLowerOrgTransform = boatPirateLower.transform;
 
         StartCoroutine(coBoatBob());
 	}
@@ -65,25 +69,37 @@ public class BoatMovement : MonoBehaviour
 			float delta = cycle * bobHeight;
 			float rotate = cycle * maxRotate;
 
-			boatFishingUpper.transform.eulerAngles = new Vector3(0.0f, 0.0f, rotate);
-			pos = boatFishingUpperStartPos;
-			pos.y += delta;
-			boatFishingUpper.transform.position = pos;
+            if (boatFishingUpper != null)
+            {
+                boatFishingUpper.transform.eulerAngles = new Vector3(0.0f, 0.0f, rotate);
+                pos = boatFishingUpperStartPos;
+                pos.y += delta;
+                boatFishingUpper.transform.position = pos;
+            }
 
-			boatFishingLower.transform.eulerAngles = new Vector3(0.0f, 0.0f, -rotate);
-			pos = boatFishingLowertartPos;
-			pos.y -= delta;
-			boatFishingLower.transform.position = pos;
+            if (boatFishingLower != null)
+            {
+                boatFishingLower.transform.eulerAngles = new Vector3(0.0f, 0.0f, -rotate);
+                pos = boatFishingLowertartPos;
+                pos.y -= delta;
+                boatFishingLower.transform.position = pos;
+            }
 
-			boatPirateUpper.transform.eulerAngles = new Vector3(0.0f, 0.0f, rotate);
-			pos = boatPirateUpperStartPos;
-			pos.y += delta;
-			boatPirateUpper.transform.position = pos;
+            if (boatPirateUpper != null)
+            {
+                boatPirateUpper.transform.eulerAngles = new Vector3(0.0f, 0.0f, rotate);
+                pos = boatPirateUpperStartPos;
+                pos.y += delta;
+                boatPirateUpper.transform.position = pos;
+            }
 
-			boatPirateLower.transform.eulerAngles = new Vector3(0.0f, 0.0f, -rotate);
-			pos = boatPirateLowerStartPos;
-			pos.y -= delta;
-			boatPirateLower.transform.position = pos;
+            if (boatPirateLower != null)
+            {
+                boatPirateLower.transform.eulerAngles = new Vector3(0.0f, 0.0f, -rotate);
+                pos = boatPirateLowerStartPos;
+                pos.y -= delta;
+                boatPirateLower.transform.position = pos;
+            }
 
 			yield return new WaitForSeconds(0.02f);
 			time += 0.02f;

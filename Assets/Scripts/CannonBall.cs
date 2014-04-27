@@ -16,7 +16,7 @@ public class CannonBall : MonoBehaviour {
 	private Rigidbody m_MyRB;
 
 	private float m_fLifeTimer;
-	private Vector3 m_fMaxDistance;
+	private Vector3 m_OriginPos;
 
 	private Vector3 m_fGravity;
 	private Transform m_MyTransform;
@@ -32,10 +32,11 @@ public class CannonBall : MonoBehaviour {
 		m_fStartTime = Time.time;
 		m_MyRB = rigidbody;
 		m_fGravity = Physics.gravity;
-		m_fLifeTimer = Time.time + fTimeToLive;
+		m_fLifeTimer = Time.time + LifeModifier;
 		m_MyTransform = transform;
 		smokeParticle = m_MyTransform.FindChild ("BallParticles").GetComponent<ParticleSystem>();
 		ballRenderer = GetComponent<MeshRenderer> ();
+		m_OriginPos = m_MyTransform.position;
 	}
 	
 	// Update is called once per frame
@@ -47,9 +48,9 @@ public class CannonBall : MonoBehaviour {
 
 	void Update()
 	{
-		if (Time.time >= m_fLifeTimer || m_MyTransform.position.y >= fMaxHeight) 
+		
+		if(Vector3.Distance(m_MyTransform.position, m_OriginPos) >= LifeModifier || m_MyTransform.position.y >= fMaxHeight)
 		{
-			m_MyRB.constraints = RigidbodyConstraints.FreezeAll;
 			smokeParticle.enableEmission = false;
 			ballRenderer.enabled = false;
 			if(!m_bFishSpawned)
@@ -59,12 +60,7 @@ public class CannonBall : MonoBehaviour {
 			}
 			Destroy(gameObject, 2.0f);
 		}
-		if (m_MyRB.velocity.y > 0 && !m_bProjectileReachedApex) 
-		{
-			m_bProjectileReachedApex = true;
-			m_fHalfTime = Time.time - m_fStartTime;
-			m_fLifeTimer = Time.time + (m_fHalfTime + LifeModifier);
-		}
+		
 	}
 
 

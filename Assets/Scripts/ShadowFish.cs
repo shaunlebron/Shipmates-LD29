@@ -3,7 +3,6 @@ using System.Collections;
 
 public class ShadowFish : MonoBehaviour 
 {
-	public GameObject shadowfish;
 	
 	Vector3 initialPosition;
 	float swimVelocity = 1.0f;

@@ -28,6 +28,7 @@ public class Inputs : MonoBehaviour
 	bool poleReturning = false;
 
 	public CannonFire cannonfire;
+    Bobber bobbeScript;
 
 	// Use this for initialization
 	void Start ()
@@ -110,17 +111,20 @@ public class Inputs : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0) && mouse0Targeting)
 		{
-			// Shoot!
+			// Shoot bobber
 			mouse0Targeting = false;
 			targetingArrowHead.renderer.enabled = false;
 			targetingArrowBody.renderer.enabled = false;
 			poleReturning = true;
 			currentPoleAngle = 0;
+
+            //TODO Instantiate a bobber and get the script
+
 		}
 
         if (Input.GetMouseButtonUp(1) && mouse1Targeting)
 		{
-			// Shoot!
+			// Shoot ball
 			mouse1Targeting = false;
 			targetingArrowHead.renderer.enabled = false;
 			targetingArrowBody.renderer.enabled = false;

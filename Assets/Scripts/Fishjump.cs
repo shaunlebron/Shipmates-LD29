@@ -4,7 +4,7 @@ using System.Collections;
 public class Fishjump : MonoBehaviour {
     const float jumpSpeed = 123f;
     public GameObject splash;
-
+	public GameObject shadowFish;
 	// Use this for initialization
 	void Start () 
     {
@@ -60,6 +60,7 @@ public class Fishjump : MonoBehaviour {
         //}
 
         rigidbody.useGravity = false;
+		Instantiate (shadowFish, transform.position, shadowFish.transform.rotation);
         Destroy(GameObject.Find("fish(Clone)"), 0.2f);
     }
 

@@ -60,10 +60,15 @@ public class CannonBall : MonoBehaviour {
 				m_MyRB.constraints = RigidbodyConstraints.FreezeAll;
 				if(CheckForPirateCollision())
 				{
-					
+					// scaring away the fishes
+//					if(GameObject.Find ("ShadowFish") != null)
+//					{
+//						GameObject.Find ("ShadowFish").GetComponent<ShadowFish>().ScaredAway = true;
+//					}
 				}
 				else
 				{
+					
 					if(!m_bFishSpawned)
 					{
 						Instantiate(fishPrefab, m_MyTransform.position, Quaternion.identity);

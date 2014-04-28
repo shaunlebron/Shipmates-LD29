@@ -8,10 +8,13 @@ public class ShadowFish : MonoBehaviour
 	float swimVelocity = 1.0f;
 	float swimRadius = 1.0f;
 	float timer = 0.0f;
-
+	
+	public bool ScaredAway {get; set;}
+	
 	// Use this for initialization
 	void Start () 
     { 
+		ScaredAway = false;
 		initialPosition = transform.position;
 	}
 	
@@ -36,7 +39,7 @@ public class ShadowFish : MonoBehaviour
 		
 		//timer is temporary, this conditional needs to be activated by a ship hit event
 		timer += 1.0f;
-		if(timer == 120)
+		if(timer == 240 || ScaredAway)
 		{
 			gameObject.AddComponent("ShadowFishScurry");
 			Destroy(this);

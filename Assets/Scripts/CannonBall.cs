@@ -9,7 +9,8 @@ public class CannonBall : MonoBehaviour {
 	private MeshRenderer ballRenderer;
 	private ParticleSystem smokeParticle;
 	
-	private float fMaxHeight;
+	private float fMaxHeight = -4.75f;
+	private float fMinHeight = -8f;
 
 	public float LifeModifier { get; set; }
 
@@ -23,7 +24,7 @@ public class CannonBall : MonoBehaviour {
 	
 	
 	private bool m_bFishSpawned = false;
-
+	private bool m_bBallStopped = false;
 	// Use this for initialization
 	void Start () {
 
@@ -35,7 +36,7 @@ public class CannonBall : MonoBehaviour {
 		smokeParticle = m_MyTransform.FindChild ("BallParticles").GetComponent<ParticleSystem>();
 		ballRenderer = GetComponent<MeshRenderer> ();
 		m_OriginPos = m_MyTransform.position;
-		fMaxHeight = m_OriginPos.y;
+		
 	}
 	
 	// Update is called once per frame
@@ -48,18 +49,60 @@ public class CannonBall : MonoBehaviour {
 	void Update()
 	{
 		
-		if(Vector3.Distance(m_MyTransform.position, m_OriginPos) >= LifeModifier || m_MyTransform.position.y >= fMaxHeight)
+		if(Vector3.Distance(m_MyTransform.position, m_OriginPos) >= LifeModifier || m_MyTransform.position.y > fMaxHeight
+			|| m_MyTransform.position.y <= fMinHeight)
 		{
-			smokeParticle.enableEmission = false;
-			ballRenderer.enabled = false;
-			if(!m_bFishSpawned)
+			if(!m_bBallStopped)
 			{
-				Instantiate(fishPrefab, m_MyTransform.position, Quaternion.identity);
-				m_bFishSpawned = true;
+				m_bBallStopped = true;
+				smokeParticle.enableEmission = false;
+				ballRenderer.enabled = false;
+				m_MyRB.constraints = RigidbodyConstraints.FreezeAll;
+				if(CheckForPirateCollision())
+				{
+					
+				}
+				else
+				{
+					if(!m_bFishSpawned)
+					{
+						Instantiate(fishPrefab, m_MyTransform.position, Quaternion.identity);
+						m_bFishSpawned = true;
+					}
+				}
 			}
+			
+			
 			Destroy(gameObject, 2.0f);
 		}
 		
+	}
+	
+	bool CheckForPirateCollision()
+	{
+		if(GameObject.Find ("BaddiePirateShip") == null)
+			return false;
+		Transform pirateShip = GameObject.Find("BaddiePirateShip").transform;
+		if(pirateShip != null)
+		{
+			Debug.Log (Vector3.Distance (m_MyTransform.position, pirateShip.position));
+			if(Vector3.Distance (m_MyTransform.position, pirateShip.position) <= 2.5f)
+			{
+				//add sound effect
+				pirateShip.GetComponent<MeshRenderer>().enabled = false;
+				return true;
+				//send message to signal ship sank
+			}
+		}
+		else
+		{
+			Debug.Log ("No ship found");
+		}
+		
+		
+		
+		return false;
+	
 	}
 
 

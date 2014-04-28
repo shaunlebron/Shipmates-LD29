@@ -182,6 +182,7 @@ public class Inputs : MonoBehaviour
                 bobber.GetComponent<Bobber>().enabled = true;
                 bobber.GetComponent<BoatMovement>().enabled = true;
                 GameObject.Find("BaddiePirateShip").renderer.enabled = true;
+				finished = true;
             }
 
             yield return new WaitForSeconds(0.02f);       

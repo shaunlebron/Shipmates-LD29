@@ -6,7 +6,8 @@ public class CannonFire : MonoBehaviour {
 	public Transform cannonBallPrefab;
 
 	private float fMinPower = 0.25f;
-	private float fForceMultiplier = 12;
+	private float fMinDistance = 0.5f;
+	private float fForceMultiplier = 15;
 	public Transform[] portholeTransforms;
 
 	private int m_iCannonIndex = 0;
@@ -33,7 +34,7 @@ public class CannonFire : MonoBehaviour {
 		Transform newBall = Instantiate (cannonBallPrefab, portholeTransforms[m_iCannonIndex].position - Vector3.forward, Quaternion.identity) as Transform;
 
 		ballRB = newBall.rigidbody;
-		newBall.GetComponent<CannonBall> ().LifeModifier = (1 + (fForceMultiplier * 0.5f) * power);
+		newBall.GetComponent<CannonBall> ().LifeModifier = (fMinDistance + (fForceMultiplier * 0.5f) * power);
 		ballRB.AddForce (direction * (power * fForceMultiplier), ForceMode.Impulse);
 
 		m_iCannonIndex++;

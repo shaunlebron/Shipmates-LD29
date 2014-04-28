@@ -7,8 +7,8 @@ public class SunMoonMovement : MonoBehaviour
 	const float totalDuration = 6.0f;
 	const float travelDegrees = 100f;
 
-	GameObject sun;
-	GameObject moon;
+    GameObject sun;
+    GameObject moon;
     Light light;
 
 	Vector3 sunPivot;

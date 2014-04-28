@@ -10,6 +10,7 @@ public class Inputs : MonoBehaviour
 	const float MaxArrowLength = 2.0f;
 	const float PoleAngleRange = 45.0f; // in degrees
 	const float PoleReturnSpeed = 45.0f; // in degrees per second
+    public GameObject bobberPrefab;
 
 	float mouseDownStartTime;
 	bool mouse0Targeting;
@@ -17,6 +18,7 @@ public class Inputs : MonoBehaviour
 
 	GameObject targetingArrowHead;
 	GameObject targetingArrowBody;
+    GameObject bobberAnchor;
 
 	Vector3 targetingArrowFishermanAnchorPos;
 	Vector3[] targetingArrowPirateAnchorPos = new Vector3[4];
@@ -41,6 +43,7 @@ public class Inputs : MonoBehaviour
 		targetingArrowBody.renderer.enabled = false;
 
 		GameObject anchor = GameObject.Find("FishermanAnchor");
+        bobberAnchor = GameObject.Find("BobberAnchor");
 		targetingArrowFishermanAnchorPos = anchor.transform.position;
 
 		anchor = GameObject.Find(piratePortNames[0]);
@@ -89,6 +92,9 @@ public class Inputs : MonoBehaviour
 
 		if (Input.GetMouseButton(0) && mouse0Targeting) // fisherman
 		{
+            if (bobber != null)
+                Destroy(bobber);
+
 			// Draw targeting arrow
 			float heldTime = Time.fixedTime - mouseDownStartTime;
 			float power = Mathf.Clamp(heldTime / arrowGrowSpeed, 0.0f, 1.0f);
@@ -117,14 +123,16 @@ public class Inputs : MonoBehaviour
         if (Input.GetMouseButtonUp(0) && mouse0Targeting)
 		{
 			// Shoot bobber
-			mouse0Targeting = false;
+            mouse0Targeting = false;
 			targetingArrowHead.renderer.enabled = false;
 			targetingArrowBody.renderer.enabled = false;
 			poleReturning = true;
 			currentPoleAngle = 0;
 
-            //TODO Instantiate a bobber and get the script
-
+            float heldTime = Time.fixedTime - mouseDownStartTime;
+            float power = Mathf.Clamp(heldTime / arrowGrowSpeed, 0.0f, 1.0f);
+            Vector3 arrowDirection = (mouseWorldPosition - targetingArrowFishermanAnchorPos).normalized; 
+            StartCoroutine(coTossBobber(arrowDirection, power));
 		}
 
         if (Input.GetMouseButtonUp(1) && mouse1Targeting)
@@ -153,6 +161,34 @@ public class Inputs : MonoBehaviour
 		//fishingPole.transform.position = polePosition;
 		//fishingPole.transform.localScale = new Vector3(poleScale/16, poleScale, poleScale);
 	}
+
+    GameObject bobber;
+    IEnumerator coTossBobber(Vector3 dir, float power)
+    {
+        bobber = Instantiate(bobberPrefab) as GameObject;
+        bobber.transform.position = bobberAnchor.transform.position;
+    
+        bobber.rigidbody.AddForce(dir * (power * 10), ForceMode.Impulse);
+
+        float ymin = Random.Range(-8f, -4.4f);
+        bool finished = false;
+        while (!finished)
+        {
+            if (bobber.transform.position.y < ymin)
+            {
+                //stop bobber fall
+                bobber.rigidbody.useGravity = false;
+                bobber.rigidbody.velocity = Vector3.zero;
+                bobber.GetComponent<Bobber>().enabled = true;
+                bobber.GetComponent<BoatMovement>().enabled = true;
+            }
+
+            yield return new WaitForSeconds(0.02f);       
+        }
+
+
+        
+    }
 
 	void UpdateArrow(Vector3 anchor, Vector3 arrowDirection, float power)
 	{

@@ -22,6 +22,8 @@ public class BoatMovement : MonoBehaviour
 	Transform boatPirateUpperOrgTransform;
 	Transform boatPirateLowerOrgTransform;
 
+
+
 	// Use this for initialization
 	void Start () 
     {

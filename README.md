@@ -2,4 +2,7 @@
 
 A Ludum Dare 29 team collaboration.
 
-![screenshot](screenshot.png)
+![title](pictures/title.png)
+![fish](pictures/fish.png)
+![credits](pictures/credits.png)
+![team](pictures/team.png)

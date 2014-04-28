@@ -24,7 +24,7 @@ public class CannonFire : MonoBehaviour {
 
 	public void FireCannon(Vector3 direction, float power)
 	{
-		Debug.Log ("Power " + power + " Direction.y " + direction.y);
+		//Debug.Log ("Power " + power + " Direction.y " + direction.y);
 		if (power <= fMinPower) 
 		{
 			power = fMinPower;
@@ -33,7 +33,7 @@ public class CannonFire : MonoBehaviour {
 		Transform newBall = Instantiate (cannonBallPrefab, portholeTransforms[m_iCannonIndex].position - Vector3.forward, Quaternion.identity) as Transform;
 
 		ballRB = newBall.rigidbody;
-		newBall.GetComponent<CannonBall> ().LifeModifier = (1 + 6*power);
+		newBall.GetComponent<CannonBall> ().LifeModifier = (1 + (fForceMultiplier * 0.5f) * power);
 		ballRB.AddForce (direction * (power * fForceMultiplier), ForceMode.Impulse);
 
 		m_iCannonIndex++;

@@ -37,6 +37,8 @@ public class Intro : MonoBehaviour {
     public AudioClip KT9;
     public AudioClip KT10;
 
+    const float endGameTime = 180;
+
     //AudioSource audio;
 
 	// Use this for initialization
@@ -47,6 +49,7 @@ public class Intro : MonoBehaviour {
         StartCoroutine(coLogo());
         StartCoroutine(coMoveDock());
         StartCoroutine(coGripe());
+        StartCoroutine(coEndGame());
         
         input.SetDisabled(true);
 	}
@@ -138,5 +141,51 @@ public class Intro : MonoBehaviour {
 
         audio.PlayOneShot(KT5);
         
+    }
+
+    
+    IEnumerator coEndGame()
+    {
+        //Wait for end game
+        yield return new WaitForSeconds(endGameTime);
+
+
+        //Set Sun to endgame and wait for it to finish
+        GameObject.Find("SunMoon").GetComponent<SunMoonMovement>().endgame = true;
+        while (!GameObject.Find("SunMoon").GetComponent<SunMoonMovement>().stopped)
+            yield return new WaitForSeconds(0.3f);
+
+        //Move Dock in
+        GameObject.Find("Scene").GetComponent<Inputs>().SetDisabled(true);
+        dock.transform.localPosition = new Vector3(
+            22, //move dock offscreen right
+            dock.transform.localPosition.y,
+            dock.transform.localPosition.z);
+        while (dock.transform.localPosition.x > 11.65f)
+        {
+            dock.transform.localPosition = new Vector3(
+                dock.transform.localPosition.x - 0.03f, //move dock offscreen right
+                dock.transform.localPosition.y,
+                dock.transform.localPosition.z);
+            yield return new WaitForSeconds(0.02f);
+        }
+        Debug.Log(dock.transform.position.x);
+
+        //ShowCredits
+        StartCoroutine(coCredits());
+    }
+
+    IEnumerator coCredits()
+    {
+        //fade logo
+        Color origCLR = credits.renderer.material.GetColor("_TintColor");
+        Color clr = origCLR;
+        float dir = 1;
+        for (int i = 0; i < 100; i++)
+        {
+            clr.a += 0.01f * dir;
+            credits.renderer.materials[0].SetColor("_TintColor", clr);
+            yield return new WaitForSeconds(0.02f);
+        }
     }
 }

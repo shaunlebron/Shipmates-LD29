@@ -7,6 +7,9 @@ public class SunMoonMovement : MonoBehaviour
 	const float totalDuration = 6.0f;
 	const float travelDegrees = 100f;
 
+    public bool endgame = false;
+    public bool stopped = false;
+
     GameObject sun;
     GameObject moon;
     Light light;
@@ -109,6 +112,13 @@ public class SunMoonMovement : MonoBehaviour
                 }
                 //reset color
                 clr = clrOrig;
+
+                //check for endgame
+                if (endgame)
+                {
+                    finished = true;
+                    stopped = true; // flag for endgame seq.
+                }
             }
 		}
 	}

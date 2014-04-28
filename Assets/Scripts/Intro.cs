@@ -37,7 +37,7 @@ public class Intro : MonoBehaviour {
     public AudioClip KT9;
     public AudioClip KT10;
 
-    const float endGameTime = 180;
+    const float endGameTime = 1;//60;
 
     //AudioSource audio;
 
@@ -46,9 +46,9 @@ public class Intro : MonoBehaviour {
     {
         input = GameObject.Find("Scene").GetComponent<Inputs>();
 
-        StartCoroutine(coLogo());
-        StartCoroutine(coMoveDock());
-        StartCoroutine(coGripe());
+        //StartCoroutine(coLogo());
+        //StartCoroutine(coMoveDock());
+        //StartCoroutine(coGripe());
         StartCoroutine(coEndGame());
         
         input.SetDisabled(true);
@@ -84,18 +84,24 @@ public class Intro : MonoBehaviour {
     {
         //KidGripe
         audio.PlayOneShot(KT1);
-        yield return new WaitForSeconds(1.3f);
+        yield return new WaitForSeconds(1.5f);
         audio.PlayOneShot(GP1);
         yield return new WaitForSeconds(5.3f);
 
         //enable gameinputs
         input.SetDisabled(false);
 
-
         audio.PlayOneShot(KT2);
         yield return new WaitForSeconds(2.6f);              
         audio.PlayOneShot(GP2);
-        yield return new WaitForSeconds(2.3f);
+        yield return new WaitForSeconds(3.4f);
+
+        audio.PlayOneShot(KT3);
+        yield return new WaitForSeconds(3f);
+        audio.PlayOneShot(GP3);
+        yield return new WaitForSeconds(4.8f);
+        audio.PlayOneShot(KT4);
+        yield return new WaitForSeconds(3f);  
 
         StartCoroutine(coImaPirate());
     }
@@ -149,11 +155,12 @@ public class Intro : MonoBehaviour {
         //Wait for end game
         yield return new WaitForSeconds(endGameTime);
 
-
         //Set Sun to endgame and wait for it to finish
         GameObject.Find("SunMoon").GetComponent<SunMoonMovement>().endgame = true;
         while (!GameObject.Find("SunMoon").GetComponent<SunMoonMovement>().stopped)
             yield return new WaitForSeconds(0.3f);
+
+        //audio.PlayOneShot();
 
         //Move Dock in
         GameObject.Find("Scene").GetComponent<Inputs>().SetDisabled(true);

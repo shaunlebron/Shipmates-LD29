@@ -12,6 +12,9 @@ public class Inputs : MonoBehaviour
 	const float PoleReturnSpeed = 45.0f; // in degrees per second
     public GameObject bobberPrefab;
 
+    public bool caughtFish = false;
+    public bool sunkaShip = false;
+
 	float mouseDownStartTime;
 	bool mouse0Targeting;
 	bool mouse1Targeting;

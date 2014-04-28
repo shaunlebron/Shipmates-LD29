@@ -85,18 +85,18 @@ public class CannonBall : MonoBehaviour {
 		Transform pirateShip = GameObject.Find("BaddiePirateShip").transform;
 		if(pirateShip != null)
 		{
-			Debug.Log (Vector3.Distance (m_MyTransform.position, pirateShip.position));
+			//Debug.Log (Vector3.Distance (m_MyTransform.position, pirateShip.position));
 			if(Vector3.Distance (m_MyTransform.position, pirateShip.position) <= 2.5f)
 			{
 				//add sound effect
-				pirateShip.GetComponent<MeshRenderer>().enabled = false;
+				StartCoroutine(coFadePirateShip(pirateShip));
 				return true;
 				//send message to signal ship sank
 			}
 		}
 		else
 		{
-			Debug.Log ("No ship found");
+			//Debug.Log ("No ship found");
 		}
 		
 		
@@ -105,5 +105,17 @@ public class CannonBall : MonoBehaviour {
 	
 	}
 
-
+	IEnumerator coFadePirateShip(Transform ship)
+	{
+		//fade logo
+        Color origCLR = ship.renderer.material.GetColor("_Color");
+        Color clr = origCLR;
+        float dir = 1;
+        for (int i = 0; i < 100; i++)
+        {
+            clr.a -= 0.01f * dir;
+            ship.renderer.materials[0].SetColor("_Color", clr);
+            yield return new WaitForSeconds(0.02f);
+        }
+	}
 }

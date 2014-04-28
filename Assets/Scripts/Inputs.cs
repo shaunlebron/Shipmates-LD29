@@ -181,6 +181,7 @@ public class Inputs : MonoBehaviour
                 bobber.rigidbody.velocity = Vector3.zero;
                 bobber.GetComponent<Bobber>().enabled = true;
                 bobber.GetComponent<BoatMovement>().enabled = true;
+                GameObject.Find("BaddiePirateShip").renderer.enabled = true;
             }
 
             yield return new WaitForSeconds(0.02f);       

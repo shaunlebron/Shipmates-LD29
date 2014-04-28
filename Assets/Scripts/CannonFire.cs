@@ -5,9 +5,9 @@ public class CannonFire : MonoBehaviour {
 
 	public Transform cannonBallPrefab;
 
-	private float fMinPower = 0.25f;
+	private float fMinPower = 0.05f;
 	private float fMinDistance = 0.5f;
-	private float fForceMultiplier = 15;
+	private float fForceMultiplier = 20f;
 	public Transform[] portholeTransforms;
 
 	private int m_iCannonIndex = 0;

@@ -42,7 +42,7 @@ public class CannonBall : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () 
 	{
-		m_MyRB.AddForce (-m_fGravity);
+		//m_MyRB.AddForce (-m_fGravity);
 
 	}
 

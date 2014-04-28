@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Inputs : MonoBehaviour
 {
-    bool disabled = false;
+    public bool disabled = false;
 
 	const float arrowGrowSpeed = 1.5f; // time it takes to get to full power
 	const float MinArrowLength = 1.0f;
@@ -12,8 +12,8 @@ public class Inputs : MonoBehaviour
 	const float PoleReturnSpeed = 45.0f; // in degrees per second
     public GameObject bobberPrefab;
 
-    public bool caughtFish = false;
-    public bool sunkaShip = false;
+    public bool caughtFish = true;
+    public bool sunkaShip = true;
 
 	float mouseDownStartTime;
 	bool mouse0Targeting;
@@ -36,10 +36,12 @@ public class Inputs : MonoBehaviour
 
 	public CannonFire cannonfire;
     Bobber bobbeScript;
+    Intro intro;
 
 	// Use this for initialization
 	void Start ()
 	{
+        intro = GameObject.Find("Intro").GetComponent<Intro>();
 		targetingArrowHead = GameObject.Find("ArrowHead");
 		targetingArrowBody = GameObject.Find("Arrow");
 		targetingArrowHead.renderer.enabled = false;
@@ -114,8 +116,11 @@ public class Inputs : MonoBehaviour
 			}
 		}
 
+        if (Input.GetMouseButtonDown(1) && mouse1Targeting)
+            audio.PlayOneShot(intro.KT10);
 		if (Input.GetMouseButton(1) && mouse1Targeting) // pirate ship
 		{
+
 			// Draw targeting arrow
 			float heldTime = Time.fixedTime - mouseDownStartTime;
 			float power = Mathf.Clamp(heldTime / arrowGrowSpeed, 0.0f, 1.0f);
@@ -125,6 +130,8 @@ public class Inputs : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0) && mouse0Targeting)
 		{
+            audio.PlayOneShot(intro.GP7);
+
 			// Shoot bobber
             mouse0Targeting = false;
 			targetingArrowHead.renderer.enabled = false;
@@ -140,6 +147,8 @@ public class Inputs : MonoBehaviour
 
         if (Input.GetMouseButtonUp(1) && mouse1Targeting)
 		{
+            audio.PlayOneShot(intro.KT11);
+
 			// Shoot ball
 			mouse1Targeting = false;
 			targetingArrowHead.renderer.enabled = false;
@@ -171,28 +180,74 @@ public class Inputs : MonoBehaviour
         bobber = Instantiate(bobberPrefab) as GameObject;
         bobber.transform.position = bobberAnchor.transform.position;
     
-        bobber.rigidbody.AddForce(dir * (power * 10), ForceMode.Impulse);
+        bobber.rigidbody.AddForce(dir * (power * 8), ForceMode.Impulse);
 
+        //Check for ymin and stop
         float ymin = Random.Range(-8f, -4.4f);
         bool finished = false;
         while (!finished)
         {
+            //Stop Bobber
             if (bobber.transform.position.y < ymin)
             {
-                //stop bobber fall
+                //stop bobber
                 bobber.rigidbody.useGravity = false;
                 bobber.rigidbody.velocity = Vector3.zero;
-                bobber.GetComponent<Bobber>().enabled = true;
-                bobber.GetComponent<BoatMovement>().enabled = true;
-                GameObject.Find("BaddiePirateShip").renderer.enabled = true;
 				finished = true;
-            }
 
+                //Splash
+                GameObject splash = GameObject.Find("BobberSplash");
+                splash.renderer.enabled = true;
+                StartCoroutine(coSplash(splash.transform));
+
+                //Fadin Pirate Baddie    
+                StartCoroutine(coFadeInBaddieShip());
+            }
             yield return new WaitForSeconds(0.02f);       
+        }
+        
+    }
+
+    IEnumerator coFadeInBaddieShip()
+    {
+        GameObject baddie = GameObject.Find("BaddiePirateShip");
+        baddie.renderer.enabled = true;
+
+        Color clr = baddie.renderer.material.GetColor("_Color");
+        for (int i = 0; i < 100; i++)
+        {
+            clr.a += 0.005f;
+            baddie.renderer.material.SetColor("_Color", clr);
+            yield return new WaitForSeconds(0.02f);
+        }
+
+        //Look a pirateShip
+        if (!playedPlunder)
+        {
+            playedPlunder = true;
+            audio.PlayOneShot(intro.KT9);
         }
 
 
-        
+    }
+
+    bool playedPlunder = false;
+    public IEnumerator coSplash(Transform t)
+    {
+        audio.PlayOneShot(intro.GP8);
+
+        for (int i = 0; i < 10; i++)
+        {
+            t.localScale = new Vector3(t.localScale.x+0.1f,
+                                       t.localScale.y+0.1f,
+                                       t.localScale.z);
+            yield return new WaitForSeconds(0.01f);
+        }
+        t.renderer.enabled = false;
+
+        bobber.GetComponent<Bobber>().enabled = true;
+        bobber.GetComponent<BoatMovement>().enabled = true;
+
     }
 
 	void UpdateArrow(Vector3 anchor, Vector3 arrowDirection, float power)

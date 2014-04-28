@@ -58,43 +58,39 @@ public class CannonBall : MonoBehaviour {
 				smokeParticle.enableEmission = false;
 				ballRenderer.enabled = false;
 				m_MyRB.constraints = RigidbodyConstraints.FreezeAll;
-				if(CheckForPirateCollision())
+				if(CheckForPirateCollision()==true)
 				{
-					// scaring away the fishes
-//					if(GameObject.Find ("ShadowFish") != null)
-//					{
-//						GameObject.Find ("ShadowFish").GetComponent<ShadowFish>().ScaredAway = true;
-//					}
+                    //Boom Sunk a ship
 				}
 				else
-				{
-					
+				{	
 					if(!m_bFishSpawned)
 					{
 						Instantiate(fishPrefab, m_MyTransform.position, Quaternion.identity);
 						m_bFishSpawned = true;
 					}
 				}
-			}
-			
-			
+			}	
 			Destroy(gameObject, 2.0f);
-		}
-		
+		}	
 	}
 	
 	bool CheckForPirateCollision()
 	{
 		if(GameObject.Find ("BaddiePirateShip") == null)
 			return false;
-		Transform pirateShip = GameObject.Find("BaddiePirateShip").transform;
-		if(pirateShip != null)
+		GameObject pirateShip = GameObject.Find("BaddiePirateShip");
+
+        Color clr = pirateShip.renderer.material.GetColor("_Color");
+		if(pirateShip != null && clr.a >= 0.1f)
 		{
 			//Debug.Log (Vector3.Distance (m_MyTransform.position, pirateShip.position));
-			if(Vector3.Distance (m_MyTransform.position, pirateShip.position) <= 2.5f)
-			{
+			if(Vector3.Distance (m_MyTransform.position, pirateShip.transform.position) <= 2.5f)
+            {
 				//add sound effect
-				StartCoroutine(coFadePirateShip(pirateShip));
+                audio.PlayOneShot(GameObject.Find("Intro").GetComponent<Intro>().KT12);
+
+				StartCoroutine(coFadePirateShip(pirateShip.transform));
 				return true;
 				//send message to signal ship sank
 			}
@@ -103,15 +99,12 @@ public class CannonBall : MonoBehaviour {
 		{
 			//Debug.Log ("No ship found");
 		}
-		
-		
-		
 		return false;
 	
 	}
-
 	IEnumerator coFadePirateShip(Transform ship)
 	{
+        GameObject.Find("Scene").GetComponent<Inputs>().sunkaShip = true;
 		//fade logo
         Color origCLR = ship.renderer.material.GetColor("_Color");
         Color clr = origCLR;
@@ -122,5 +115,6 @@ public class CannonBall : MonoBehaviour {
             ship.renderer.materials[0].SetColor("_Color", clr);
             yield return new WaitForSeconds(0.02f);
         }
+
 	}
 }

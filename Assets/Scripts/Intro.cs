@@ -5,6 +5,7 @@ public class Intro : MonoBehaviour {
     public GameObject logo;
     public GameObject credits;
     public GameObject dock;
+    public GameObject instructions;
     public ParticleSystem parts;
     public GameObject boatReflection;
     public GameObject boatReflectionPirate;
@@ -36,8 +37,12 @@ public class Intro : MonoBehaviour {
     public AudioClip KT8;
     public AudioClip KT9;
     public AudioClip KT10;
+    public AudioClip KT11;
+    public AudioClip KT12;
+    public AudioClip KT13;
+    public AudioClip KT14;
 
-    const float endGameTime = 1;//60;
+    const float endGameTime = 80;
 
     //AudioSource audio;
 
@@ -46,9 +51,9 @@ public class Intro : MonoBehaviour {
     {
         input = GameObject.Find("Scene").GetComponent<Inputs>();
 
-        //StartCoroutine(coLogo());
-        //StartCoroutine(coMoveDock());
-        //StartCoroutine(coGripe());
+        StartCoroutine(coLogo());
+        StartCoroutine(coMoveDock());
+        StartCoroutine(coGripe());
         StartCoroutine(coEndGame());
         
         input.SetDisabled(true);
@@ -62,13 +67,16 @@ public class Intro : MonoBehaviour {
 
     IEnumerator coLogo()
     {
+        //lag
+        yield return new WaitForSeconds(1.5f);
+
         //fade logo
         Color origCLR = logo.renderer.material.GetColor("_Color");
         Color clr = origCLR;
         float dir = 1;
-        for (int i = 0; i < 200; i++)
+        for (int i = 0; i < 400; i++)
         {
-            if (i == 100)
+            if (i == 200)
             {
                 dir = -1;
                 yield return new WaitForSeconds(1.0f);
@@ -80,6 +88,28 @@ public class Intro : MonoBehaviour {
         }
     }
 
+    IEnumerator coInstructions()
+    {
+        //lag
+        yield return new WaitForSeconds(1.5f);
+
+        //fade logo
+        Color origCLR = instructions.renderer.material.GetColor("_Color");
+        Color clr = origCLR;
+        float dir = 1;
+        for (int i = 0; i < 200; i++)
+        {
+            if (i == 100)
+            {
+                dir = -1;
+                yield return new WaitForSeconds(1.0f);
+            }
+
+            clr.a += 0.01f * dir;
+            instructions.renderer.materials[0].SetColor("_Color", clr);
+            yield return new WaitForSeconds(0.02f);
+        }
+    }
     IEnumerator coGripe()
     {
         //KidGripe
@@ -88,20 +118,21 @@ public class Intro : MonoBehaviour {
         audio.PlayOneShot(GP1);
         yield return new WaitForSeconds(5.3f);
 
-        //enable gameinputs
-        input.SetDisabled(false);
-
         audio.PlayOneShot(KT2);
         yield return new WaitForSeconds(2.6f);              
-        audio.PlayOneShot(GP2);
-        yield return new WaitForSeconds(3.4f);
+        //audio.PlayOneShot(GP2);
+        //yield return new WaitForSeconds(3.4f);
 
-        audio.PlayOneShot(KT3);
-        yield return new WaitForSeconds(3f);
+        //audio.PlayOneShot(KT3);
+        //yield return new WaitForSeconds(3f);
         audio.PlayOneShot(GP3);
         yield return new WaitForSeconds(4.8f);
-        audio.PlayOneShot(KT4);
-        yield return new WaitForSeconds(3f);  
+        audio.PlayOneShot(KT3);
+        yield return new WaitForSeconds(3f);
+
+        //enable gameinputs
+        StartCoroutine(coInstructions());
+        input.SetDisabled(false);
 
         StartCoroutine(coImaPirate());
     }
@@ -157,11 +188,55 @@ public class Intro : MonoBehaviour {
 
         //Set Sun to endgame and wait for it to finish
         GameObject.Find("SunMoon").GetComponent<SunMoonMovement>().endgame = true;
-        while (!GameObject.Find("SunMoon").GetComponent<SunMoonMovement>().stopped)
-            yield return new WaitForSeconds(0.3f);
+        //while (!GameObject.Find("SunMoon").GetComponent<SunMoonMovement>().stopped)
+        //    yield return new WaitForSeconds(0.3f);
 
-        //audio.PlayOneShot();
+        //time to go home
+        audio.PlayOneShot(GP4);
+        yield return new WaitForSeconds(2.2f);
 
+        StartCoroutine(coMoveDockIn());
+
+        //girl happy/sad response
+        if (GameObject.Find("Scene").GetComponent<Inputs>().sunkaShip)
+        {
+            audio.PlayOneShot(KT1);
+            yield return new WaitForSeconds(4f);
+        }
+        else
+        {
+            audio.PlayOneShot(KT6);
+            yield return new WaitForSeconds(2.3f);
+        }
+        //ShowCredits
+        StartCoroutine(coCredits());
+
+        //SuccessFailureGirl
+        if (GameObject.Find("Scene").GetComponent<Inputs>().sunkaShip)
+        {
+            audio.PlayOneShot(KT7);
+            yield return new WaitForSeconds(2f);
+        }
+        else
+        {
+            audio.PlayOneShot(KT8);
+            yield return new WaitForSeconds(4f);
+        }
+        //SuccessFailureGrandpa
+        if (GameObject.Find("Scene").GetComponent<Inputs>().caughtFish)
+        {
+            audio.PlayOneShot(GP5);
+            yield return new WaitForSeconds(4f);
+        }
+        else
+        {
+            audio.PlayOneShot(GP6);
+            yield return new WaitForSeconds(4f);
+        }
+    }
+
+    IEnumerator coMoveDockIn()
+    {
         //Move Dock in
         GameObject.Find("Scene").GetComponent<Inputs>().SetDisabled(true);
         dock.transform.localPosition = new Vector3(
@@ -178,8 +253,6 @@ public class Intro : MonoBehaviour {
         }
         Debug.Log(dock.transform.position.x);
 
-        //ShowCredits
-        StartCoroutine(coCredits());
     }
 
     IEnumerator coCredits()

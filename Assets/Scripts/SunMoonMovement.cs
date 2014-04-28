@@ -4,7 +4,7 @@ using System.Collections;
 public class SunMoonMovement : MonoBehaviour
 {
 	const float arcSize = 13f;
-	const float totalDuration = 6.0f;
+	float totalDuration = 6f;
 	const float travelDegrees = 100f;
 
     public bool endgame = false;
@@ -41,9 +41,10 @@ public class SunMoonMovement : MonoBehaviour
 	
 	}
 
-    const float greenShift = 0.001f;
-    const float blueshift = 0.005f;
-    const float lightIntensityShift = 0.01f;
+    float greenShift = 0.001f;
+    float blueshift = 0.005f;
+    float lightIntensityShift = 0.01f;
+    bool firstreset = true;
     IEnumerator coMoveSunMoon()
     {
 		float time = 0.0f;	// TODO: get the elapsed round time from the master control program
@@ -55,6 +56,7 @@ public class SunMoonMovement : MonoBehaviour
         bool fadein = false;
 		while (!finished)
 		{
+
 			float percentTraveled = time / totalDuration;
 			Vector3 pos;
 			float angle;
@@ -78,8 +80,8 @@ public class SunMoonMovement : MonoBehaviour
             else
                 clrDir = -1f;
 
-            clr.g += greenShift*clrDir;
-            clr.b += blueshift*clrDir;
+            clr.g += greenShift  *clrDir;
+            clr.b += blueshift  *clrDir;
             light.color = clr;
             light.intensity -= lightIntensityShift*clrDir;
 
@@ -103,6 +105,16 @@ public class SunMoonMovement : MonoBehaviour
 
                 //reset time
                 time = 0.0f;
+
+                //if input set total time to one day
+                if (firstreset)
+                {
+                    totalDuration = 80f;
+                    greenShift = 0.0000751f;
+                    blueshift = 0.000375f;
+                    lightIntensityShift = 0.000751f;
+                }
+                firstreset = false;
 
                 //Dim out
                 for (int i = 0; i < 100;i++ )

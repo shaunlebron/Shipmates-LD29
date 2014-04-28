@@ -3,9 +3,9 @@ using System.Collections;
 
 public class SunMoonMovement : MonoBehaviour
 {
-	const float arcSize = 11.3f;
+	const float arcSize = 13f;
 	const float totalDuration = 6.0f;
-	const float travelDegrees = 100.0f;
+	const float travelDegrees = 100f;
 
 	GameObject sun;
 	GameObject moon;

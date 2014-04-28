@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Inputs : MonoBehaviour
 {
+    bool disabled = false;
+
 	const float arrowGrowSpeed = 1.5f; // time it takes to get to full power
 	const float MinArrowLength = 1.0f;
 	const float MaxArrowLength = 2.0f;
@@ -64,6 +66,9 @@ public class Inputs : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
+        if (disabled)
+            return;
+
 		// Get the world position of the mouse based on the z-depth of the targeting arrow anchor
 		Vector3 mouseWorldPosition = Input.mousePosition;
 		mouseWorldPosition.z = Vector3.Dot(targetingArrowFishermanAnchorPos - Camera.main.transform.position, Camera.main.transform.forward);
@@ -189,4 +194,9 @@ public class Inputs : MonoBehaviour
 		}
 	}
 	*/
+
+    public void SetDisabled(bool dis)
+    {
+        disabled = dis;
+    }
 }

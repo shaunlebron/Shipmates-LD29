@@ -79,7 +79,7 @@ public class BoatMovement : MonoBehaviour
 
             if (boatFishingLower != null)
             {
-                boatFishingLower.transform.eulerAngles = new Vector3(0.0f, 0.0f, -rotate);
+                boatFishingLower.transform.eulerAngles = new Vector3(0.0f, 0f, -rotate);
                 pos = boatFishingLowertartPos;
                 pos.y -= delta;
                 boatFishingLower.transform.position = pos;

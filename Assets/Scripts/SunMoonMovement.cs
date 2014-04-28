@@ -49,6 +49,7 @@ public class SunMoonMovement : MonoBehaviour
         Color clr = clrOrig;
         float origIntensity = light.intensity;
 
+        bool fadein = false;
 		while (!finished)
 		{
 			float percentTraveled = time / totalDuration;
@@ -82,12 +83,30 @@ public class SunMoonMovement : MonoBehaviour
 			yield return new WaitForSeconds(0.02f);
 			time += 0.02f;
 
+            if (fadein)
+            {
+                //Light fade In
+                for (int i = 0; i < 100; i++)
+                {
+                    light.intensity += .025f;
+                    yield return new WaitForSeconds(0.02f);
+                }
+                fadein = false;
+            }
 
             if (time >= totalDuration)
             {
+                fadein = true;
+
                 //reset time
                 time = 0.0f;
 
+                //Dim out
+                for (int i = 0; i < 100;i++ )
+                {
+                    light.intensity -= .025f;
+                    yield return new WaitForSeconds(0.02f);
+                }
                 //reset color
                 clr = clrOrig;
             }
